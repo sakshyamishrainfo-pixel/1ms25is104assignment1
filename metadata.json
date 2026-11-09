@@ -1,0 +1,7 @@
+{
+  "name": "ResearchMate AI",
+  "description": "An AI-powered research paper assistant for students and researchers. Generate structured paper proposals with verified citations and rigorous academic analysis.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

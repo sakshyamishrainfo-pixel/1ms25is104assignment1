@@ -1,0 +1,245 @@
+{
+  "application": {
+    "name": "ResearchMate AI",
+    "version": "1.2.0",
+    "description": "An AI-powered research paper assistant for students and researchers. Generates publication-grade research paper proposals with verified citations, structured methodology, prospective hypothesis boundaries, and academic export tools.",
+    "license": "Apache-2.0",
+    "repository": "ResearchMate-AI"
+  },
+  "features": [
+    {
+      "id": "topic_formulation",
+      "name": "Research Topic & Hypothesis Scoping",
+      "description": "Natural language topic and hypothesis input with live word/character counters and one-click preset inspirations across academic disciplines."
+    },
+    {
+      "id": "multidisciplinary_support",
+      "name": "Multi-Discipline Tailoring",
+      "description": "Domain-tailored methodology, metrics, and literature benchmarks across Computer Science, Engineering, Medicine, Environment, Business, and custom fields."
+    },
+    {
+      "id": "nine_section_blueprint",
+      "name": "Standard 9-Section Academic Blueprint",
+      "description": "Synthesizes Title, Abstract & Keywords, Introduction, Problem Statement, Objectives, Literature Review, Methodology, Expected Results, Conclusion, and References."
+    },
+    {
+      "id": "citation_integrity_engine",
+      "name": "Citation Integrity & Anti-Hallucination Audit",
+      "description": "Strict prohibition against fabricated DOIs or hallucinated authors. Explicitly classifies citations into Verified Landmarks versus Proposed Benchmarks (requiring database verification), with one-click Google Scholar and CrossRef lookups."
+    },
+    {
+      "id": "prospective_results_isolation",
+      "name": "Hypothesis & Prospective Bounds Isolation",
+      "description": "Explicit demarcation distinguishing proposed theoretical predictions and hypothesized bounds from empirical measurements."
+    },
+    {
+      "id": "live_word_counter",
+      "name": "Live Academic Word Counter & Breakdown",
+      "description": "Real-time document length tracking, reading time estimator (220 WPM), academic page estimator, and section-by-section distribution percentage breakdown against proposal benchmarks."
+    },
+    {
+      "id": "academic_typesetting",
+      "name": "Multi-Style Typesetting & Format Switcher",
+      "description": "Live formatting toggles between IEEE, APA 7th Edition, and Nature citation and heading styles with journal preprint title block styling."
+    },
+    {
+      "id": "export_capabilities",
+      "name": "Multi-Format Academic Exporters",
+      "description": "One-click copy for individual sections and full document text, structured TXT file download, and direct BibTeX (.bib) reference export for LaTeX/Overleaf."
+    },
+    {
+      "id": "workspace_archive",
+      "name": "Local Research Archive & Analytics Dashboard",
+      "description": "Client-side local storage persistence for proposals, aggregate statistics (total proposals, total words, verified landmarks, disciplines), search, and field filtering."
+    },
+    {
+      "id": "outline_navigator",
+      "name": "Sticky Document Outline Navigator",
+      "description": "Smooth-scrolling table of contents allowing researchers to rapidly navigate between document sections on desktop and mobile viewports."
+    }
+  ],
+  "aiModelConfiguration": {
+    "provider": "Google Gemini API",
+    "sdk": "@google/genai",
+    "primaryModel": "gemini-3.8-flash",
+    "fallbackModel": "gemini-3.1-flash-lite",
+    "failoverStrategy": "Race with 25-second timeout on primary candidate; automatic failover to fallback model upon 503 high demand or network stall.",
+    "responseMimeType": "application/json",
+    "thinkingConfig": {
+      "supportedLevels": ["LOW", "MEDIUM", "HIGH"],
+      "defaultLevel": "LOW",
+      "description": "Balances reasoning depth with low latency to prevent reverse proxy and iframe connection timeouts."
+    },
+    "requestTimeoutMs": 45000,
+    "httpOptions": {
+      "userAgent": "aistudio-build"
+    }
+  },
+  "inputFields": {
+    "topic": {
+      "type": "string",
+      "required": true,
+      "minLength": 5,
+      "maxLength": 1000,
+      "label": "Research Topic or Working Title",
+      "placeholder": "e.g., Evaluating quantum error mitigation techniques in NISQ-era superconducting quantum processors...",
+      "validationMessage": "Please provide a specific research topic or hypothesis (minimum 5 characters)."
+    },
+    "field": {
+      "type": "enum",
+      "required": true,
+      "label": "Academic Research Field",
+      "options": [
+        "Computer Science",
+        "Engineering",
+        "Medicine",
+        "Environment",
+        "Business",
+        "Other"
+      ],
+      "default": "Computer Science"
+    },
+    "customField": {
+      "type": "string",
+      "required": false,
+      "label": "Specify Domain / Sub-discipline",
+      "placeholder": "e.g., Cognitive Neuroscience, Materials Physics...",
+      "condition": "Visible and utilized when field is 'Other'"
+    }
+  },
+  "outputStructure": {
+    "paperTitle": {
+      "type": "string",
+      "description": "Formal scholarly title formulated for high-impact journal submission."
+    },
+    "abstract": {
+      "type": "string",
+      "description": "Concise, structured scholarly abstract (200-280 words) detailing background, problem, methodology, and theoretical impact."
+    },
+    "keywords": {
+      "type": "array",
+      "items": "string",
+      "description": "4 to 6 academic keywords or standard index terms."
+    },
+    "introduction": {
+      "type": "string",
+      "description": "Scholarly introduction setting theoretical background, significance, and scope."
+    },
+    "problemStatement": {
+      "type": "string",
+      "description": "Precise articulation of the research challenge, empirical bottlenecks, and current gaps in literature."
+    },
+    "researchObjectives": {
+      "type": "array",
+      "items": "string",
+      "description": "3 to 5 concrete, actionable, and numbered research goals."
+    },
+    "literatureReview": {
+      "type": "string",
+      "description": "Thematic critique of existing paradigms, theoretical tensions, and unresolved literature questions."
+    },
+    "researchMethodology": {
+      "type": "object",
+      "properties": {
+        "approach": {
+          "type": "string",
+          "description": "Methodological paradigm (e.g., empirical, computational simulation, quasi-experimental)."
+        },
+        "dataCollectionOrSetup": {
+          "type": "string",
+          "description": "Datasets, sample populations, experimental instruments, or simulation configurations."
+        },
+        "analyticalProcedure": {
+          "type": "string",
+          "description": "Step-by-step analytical algorithm, pipeline, or laboratory protocol."
+        },
+        "evaluationMetrics": {
+          "type": "string",
+          "description": "Quantitative benchmarks, statistical significance thresholds, and validation criteria."
+        },
+        "ethicalAndValidityConsiderations": {
+          "type": "string",
+          "description": "Internal and external validity safeguards, reproducibility considerations, and ethical compliance."
+        }
+      },
+      "required": [
+        "approach",
+        "dataCollectionOrSetup",
+        "analyticalProcedure",
+        "evaluationMetrics",
+        "ethicalAndValidityConsiderations"
+      ]
+    },
+    "expectedResults": {
+      "type": "object",
+      "properties": {
+        "hypothesizedOutcomes": {
+          "type": "string",
+          "description": "Anticipated findings framed strictly as theoretical predictions and prospective hypotheses."
+        },
+        "theoreticalSignificance": {
+          "type": "string",
+          "description": "Theoretical, computational, or clinical significance of findings if confirmed."
+        },
+        "prospectiveDistinction": {
+          "type": "string",
+          "description": "Mandatory academic distinction disclaimer declaring empirical validation is pending experimental execution."
+        }
+      },
+      "required": [
+        "hypothesizedOutcomes",
+        "theoreticalSignificance",
+        "prospectiveDistinction"
+      ]
+    },
+    "conclusion": {
+      "type": "string",
+      "description": "Scholarly synthesis of research vision, potential impact, limitations summary, and future research vectors."
+    },
+    "references": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "description": "Reference identifier e.g. [1], REF-01" },
+          "authors": { "type": "string", "description": "Authentic authors" },
+          "year": { "type": "string", "description": "Publication year" },
+          "title": { "type": "string", "description": "Authentic paper or survey title" },
+          "source": { "type": "string", "description": "Journal, conference, or institutional publisher" },
+          "doiOrUrl": { "type": "string", "description": "Verified DOI or URL, or empty if unverified" },
+          "verificationStatus": {
+            "type": "string",
+            "enum": ["verified_landmark", "proposed_benchmark_unverified"],
+            "description": "Verified status flag"
+          },
+          "verificationNote": {
+            "type": "string",
+            "description": "Citation provenance explanation or lookup instructions for databases."
+          }
+        },
+        "required": [
+          "id",
+          "authors",
+          "year",
+          "title",
+          "source",
+          "verificationStatus",
+          "verificationNote"
+        ]
+      }
+    },
+    "academicRigorNotice": {
+      "type": "string",
+      "description": "Standard academic integrity statement regarding proposal status and citation verification."
+    }
+  },
+  "applicationSettings": {
+    "storageKey": "researchmate_saved_papers_v1",
+    "maxSavedDrafts": 20,
+    "readingWordsPerMinute": 220,
+    "wordsPerPageEstimate": 350,
+    "defaultCitationStyle": "IEEE",
+    "supportedCitationStyles": ["IEEE", "APA", "Nature"],
+    "exportFormats": ["TXT", "BIB", "CLIPBOARD"]
+  }
+}
